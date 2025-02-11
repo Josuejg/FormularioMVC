@@ -1,32 +1,41 @@
-using System.Diagnostics;
 using FormularioMVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace FormularioMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new ContactViewModel
+            {
+                NuevoMensaje = new ContactMessage(),
+                Mensajes = _context.ContactMessages.ToList()
+            };
+            return View(model);
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public IActionResult Submit(ContactViewModel model)
         {
-            return View();
-        }
+            if (ModelState.IsValid)
+            {
+                _context.ContactMessages.Add(model.NuevoMensaje);
+                _context.SaveChanges();
+                TempData["Mensaje"] = "Mensaje enviado correctamente.";
+                return RedirectToAction("Index");
+            }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            model.Mensajes = _context.ContactMessages.ToList();
+            return View("Index", model);
         }
     }
 }
