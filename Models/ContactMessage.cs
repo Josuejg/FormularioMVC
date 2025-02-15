@@ -8,16 +8,16 @@ namespace FormularioMVC.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio.")]
-        [StringLength(100)]
+       
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El correo es obligatorio.")]
         [EmailAddress(ErrorMessage = "Ingrese un correo válido.")]
-        [StringLength(150)]
+
         public string Correo { get; set; }
 
         [Required(ErrorMessage = "El mensaje no puede estar vacío.")]
-        [StringLength(255)]
+        [StringLength(500,ErrorMessage = "El mensaje no puede superar los 500 caracteres")]
         public string Mensaje { get; set; }
     }
 

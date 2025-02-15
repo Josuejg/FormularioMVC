@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+
 namespace FormularioMVC.Models
 {
     public class ApplicationDbContext: DbContext
